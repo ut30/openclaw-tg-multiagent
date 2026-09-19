@@ -1,0 +1,30 @@
+# Ignore everything by default
+/*
+
+# Explicitly allowlist root files
+!/.gitignore
+!/README.md
+!/README.hi.md
+!/LICENSE
+!/.env.example
+!/docker-compose.override.yml
+
+# Explicitly allowlist directories and their contents
+!/config/
+!/config/**
+!/docs/
+!/docs/**
+!/scripts/
+!/scripts/**
+
+# Defense-in-depth: Never allow secrets even if placed inside allowlisted folders
+.env
+*.env
+*.key
+*.pem
+*.pub
+info.md
+openclaw.json
+*.json.bak*
+*secret*
+*.log

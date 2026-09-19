@@ -1,0 +1,31 @@
+# ==============================================================================
+# OpenClaw Gateway - Docker Compose Service Override
+# ==============================================================================
+services:
+  openclaw-gateway:
+    image: ghcr.io/openclaw/openclaw:latest
+    restart: unless-stopped
+    ports:
+      # Expose gateway exclusively on localhost to prevent public access
+      - "127.0.0.1:18789:18789"
+    volumes:
+      - ~/.openclaw:/home/node/.openclaw
+      - ~/.openclaw/workspace:/home/node/.openclaw/workspace
+    environment:
+      - OPENCLAW_GATEWAY_PORT=18789
+      - OPENCLAW_GATEWAY_BIND=0.0.0.0
+      - OPENCLAW_DISABLE_BONJOUR=true
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 3072M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - openclaw-isolated-net
+
+networks:
+  openclaw-isolated-net:
+    driver: bridge

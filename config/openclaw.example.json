@@ -1,0 +1,214 @@
+{
+  "gateway": {
+    "port": 18789,
+    "bind": "0.0.0.0",
+    "auth": {
+      "mode": "none"
+    }
+  },
+  "agents": {
+    "defaults": {
+      "timeoutSeconds": 45,
+      "model": {
+        "primary": "google/gemini-3-flash-preview",
+        "fallbacks": [
+          "groq/openai/gpt-oss-120b",
+          "openrouter/cohere/north-mini-code:free",
+          "openrouter/nex-agi/nex-n2.5-mini:free"
+        ]
+      }
+    },
+    "entries": {
+      "jarvis": {
+        "name": "jarvis",
+        "model": {
+          "primary": "openrouter/cohere/north-mini-code:free",
+          "fallbacks": [
+            "google/gemini-3-flash-preview",
+            "openrouter/nex-agi/nex-n2.5-mini:free"
+          ]
+        },
+        "tools": {
+          "profile": "coding",
+          "fs": {
+            "workspaceOnly": true
+          },
+          "exec": {
+            "applyPatch": {
+              "workspaceOnly": true
+            }
+          }
+        }
+      },
+      "cyra": {
+        "name": "cyra",
+        "model": {
+          "primary": "google/gemini-3-flash-preview",
+          "fallbacks": [
+            "groq/openai/gpt-oss-120b",
+            "openrouter/nex-agi/nex-n2.5-mini:free",
+            "google/gemini-3.1-flash-lite"
+          ]
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "edit",
+            "web_search",
+            "web_fetch"
+          ],
+          "deny": [
+            "exec",
+            "process",
+            "terminal",
+            "apply_patch"
+          ],
+          "fs": {
+            "workspaceOnly": true
+          },
+          "exec": {
+            "mode": "deny"
+          }
+        }
+      },
+      "sam": {
+        "name": "sam",
+        "model": {
+          "primary": "groq/openai/gpt-oss-120b",
+          "fallbacks": [
+            "google/gemini-3-flash-preview",
+            "openrouter/nex-agi/nex-n2.5-mini:free",
+            "openrouter/deepseek/deepseek-v4-flash-0731:free"
+          ]
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "edit",
+            "web_search",
+            "web_fetch"
+          ],
+          "deny": [
+            "exec",
+            "process",
+            "terminal",
+            "apply_patch"
+          ],
+          "fs": {
+            "workspaceOnly": true
+          },
+          "exec": {
+            "mode": "deny"
+          }
+        }
+      },
+      "dev": {
+        "name": "dev",
+        "model": {
+          "primary": "google/gemini-3-flash-preview",
+          "fallbacks": [
+            "groq/openai/gpt-oss-120b",
+            "openrouter/deepseek/deepseek-v4-flash-0731:free",
+            "openrouter/nex-agi/nex-n2.5-mini:free"
+          ]
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "edit",
+            "web_search",
+            "web_fetch"
+          ],
+          "deny": [
+            "exec",
+            "process",
+            "terminal",
+            "apply_patch"
+          ],
+          "fs": {
+            "workspaceOnly": true
+          },
+          "exec": {
+            "mode": "deny"
+          }
+        }
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "allowFrom": [
+        "<YOUR_TELEGRAM_USER_ID>"
+      ],
+      "groupAllowFrom": [
+        "<YOUR_TELEGRAM_USER_ID>"
+      ],
+      "groups": {
+        "<GROUP_ID>": {
+          "requireMention": true
+        },
+        "-100<GROUP_ID>": {
+          "requireMention": true
+        }
+      },
+      "accounts": {
+        "jarvis": {
+          "botToken": {
+            "source": "env",
+            "provider": "default",
+            "id": "TELEGRAM_BOT_TOKEN_JARVIS"
+          }
+        },
+        "cyra": {
+          "botToken": {
+            "source": "env",
+            "provider": "default",
+            "id": "TELEGRAM_BOT_TOKEN_CYRA"
+          }
+        },
+        "sam": {
+          "botToken": {
+            "source": "env",
+            "provider": "default",
+            "id": "TELEGRAM_BOT_TOKEN_SAM"
+          }
+        },
+        "dev": {
+          "botToken": {
+            "source": "env",
+            "provider": "default",
+            "id": "TELEGRAM_BOT_TOKEN_DEV"
+          }
+        }
+      }
+    }
+  },
+  "bindings": [
+    {
+      "channel": "telegram",
+      "account": "jarvis",
+      "agentId": "jarvis"
+    },
+    {
+      "channel": "telegram",
+      "account": "cyra",
+      "agentId": "cyra"
+    },
+    {
+      "channel": "telegram",
+      "account": "sam",
+      "agentId": "sam"
+    },
+    {
+      "channel": "telegram",
+      "account": "dev",
+      "agentId": "dev"
+    }
+  ]
+}
